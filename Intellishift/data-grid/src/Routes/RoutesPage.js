@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Login from "../Components/LoginForm/Login"
 import DataTable from "../Components/DataTable/DataTable"
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Nav, NavItem, NavLink } from "reactstrap";
 
 const RoutesPage = () => {
@@ -19,10 +21,9 @@ const RoutesPage = () => {
         <Switch>
           <Route exact path="/">
             <Login />
-            <DataTable/>
+     
           </Route>
-           <Route exact path="/datagrid">
-           
+           <Route path="/datagrid">
             <DataTable/>
           </Route>
         </Switch>
