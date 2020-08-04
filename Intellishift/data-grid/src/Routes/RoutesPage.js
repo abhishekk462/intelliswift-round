@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Login from "../Components/LoginForm/Login"
+import DataTable from "../Components/DataTable/DataTable"
 import { Nav, NavItem, NavLink } from "reactstrap";
 
 const RoutesPage = () => {
@@ -18,6 +19,11 @@ const RoutesPage = () => {
         <Switch>
           <Route exact path="/">
             <Login />
+            <DataTable/>
+          </Route>
+           <Route exact path="/datagrid">
+           
+            <DataTable/>
           </Route>
         </Switch>
     </Router>
