@@ -1,54 +1,65 @@
-import React, { useState } from "react";
-import { Button, FormGroup, FormControl, FormLabel  } from "react-bootstrap";
-import {Redirect} from 'react-router-dom';
-import { Auth } from "aws-amplify";
-
-import "./Login.css";
-
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  
-   function validateForm() {
-    return email.length > 0 && password.length > 0;
-  }
-
-  async function handleSubmit(event) {
-  event.preventDefault();
-
-  try {
-    await Auth.signIn(email, password);
-    alert("Logged in");
-  } catch (e) {
-    alert(e.message);
-  }
+import React, { Component } from 'react';
+ 
+export default class Login extends Component {
+    documentData;
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.state = {
+            title: '',
+            description: '',
+            price: ''
+        }
+    }
+ 
+handleChange= (e)=> {
+    this.setState({[e.target.name]:e.target.value});
 }
-
-  return (
-    <div className="Login">
-      <form onSubmit={handleSubmit}>
-        <FormGroup controlId="email" bsSize="large">
-          <FormLabel>Email</FormLabel>
-          <FormControl
-            autoFocus
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-        </FormGroup>
-        <FormGroup controlId="password" bsSize="large">
-          <FormLabel>Password</FormLabel>
-          <FormControl
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            type="password"
-          />
-        </FormGroup>
-        <Button block bsSize="large" disabled={!validateForm()} type="submit">
-          Login
-        </Button>
-      </form>
-    </div>
-  );
+// on form submit...
+handleFormSubmit(e) {
+    e.preventDefault()
+   localStorage.setItem('document',JSON.stringify(this.state));
+}
+ 
+// React Life Cycle
+componentDidMount() {
+    this.documentData = JSON.parse(localStorage.getItem('document'));
+ 
+    if (localStorage.getItem('document')) {
+        this.setState({
+            title: this.documentData.title,
+           description: this.documentData.description,
+           price: this.documentData.price
+    })
+} else {
+    this.setState({
+        title: '',
+        description: '',
+        price: ''
+    })
+}
+}
+ 
+render() {
+    return (
+        <div className="container">
+            <form onSubmit={this.handleFormSubmit}>
+                <div className="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" className="form-control" value={this.state.title} onChange={this.handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Description</label>
+                    <input type="text" name="description" className="form-control" value={this.state.description} onChange={this.handleChange} />
+                </div>
+                <div className="form-group">
+                    <label>Price</label>
+                    <input type="number" name="price" className="form-control" value={this.state.price} onChange={this.handleChange} />
+                </div>
+                <button type="submit" className="btn btn-primary btn-block">Submit</button>
+            </form>
+        </div>
+    )
+}
 }
