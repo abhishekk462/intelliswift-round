@@ -2,14 +2,14 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Login from "../Components/LoginForm/Login"
 import DataTable from "../Components/DataTable/DataTable"
-import CellEditable from "../Components/DataTable/CellEditable"
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Nav, NavItem, NavLink } from "reactstrap";
+import history from '../history';
 
 const RoutesPage = () => {
   return (
-    <Router>
+    <Router history={history}>
         <Nav>
           <NavItem>
             <NavLink href="/">Login</NavLink>
@@ -17,22 +17,16 @@ const RoutesPage = () => {
           <NavItem>
             <NavLink href="/datagrid">Data-Grid</NavLink>
           </NavItem>
-          <NavItem>
-            <NavLink href="/celledit">Editable Cell</NavLink>
-          </NavItem>
         </Nav>
         <hr />
         <Switch>
           <Route exact path="/">
             <Login />
-     
           </Route>
-           <Route path="/datagrid">
+           <Route path={"/datagrid"} >
             <DataTable/>
           </Route>
-          <Route path="/celledit">
-            <CellEditable/>
-          </Route>
+
         </Switch>
     </Router>
   );

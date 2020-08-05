@@ -1,108 +1,86 @@
-import React from 'react';
-import { makeStyles} from '@material-ui/core/styles';
-import PropTypes from "prop-types";
+
+import React,{useState} from 'react';
 import MaterialTable from 'material-table';
+import { makeStyles} from '@material-ui/core/styles';
+ const DataTable=(props) => {
+	 const [columns, setColumns] = useState([
+    {
 
-import {TableHead,TableContainer,TableCell,TableBody,Table,Paper,Checkbox } from '@material-ui/core';
-import TableRow from '@material-ui/core/TableRow';
+      title: 'Name', field: 'name',
+      editComponent: props => (
+        <input
+          type="text"
+          value={props.value}
+          onChange={e => props.onChange(e.target.value)}
+        />
+      )
+    },
+        { title: 'Last Name', field: 'lastname',validate:rowData => rowData.lastname.length > 3},
+        { title: 'Designation', field: 'designation',validate:rowData => rowData.designation.length > 3 },
+        { title: 'Address',field: 'address'},
+        { title: 'Mobile Number',field: 'mobile',validate: rowData => rowData.mobile > 1900},
+        { title: 'Pincode',field: 'pin'},
+        { title: 'District',field: 'dist'}
 
+  ]);
 
-
-
-
-function createData(firstname, lastname, age, mobnumber, address) {
-  return { firstname, lastname, age, mobnumber, address };
-}
-const columns = [
-  { id: 'firstname', label: 'First Name', minWidth: 170 },
-  { id: 'lastname', label: 'Last Name', minWidth: 100 },
-  { id: 'age', label: 'age', minWidth: 100 },
-  { id: 'mobnumber', label: 'Mobile Number', minWidth: 100 },
-  { id: 'address', label: 'Address', minWidth: 100 }
- 
-];
-
-const rows = [
-  createData('Abhishek', 'Kumar', 29, 6364236112,"patna"),
-  createData('Saurav', 'Kumar', 29, 87834758583,"patna"),
-  createData('Sony', 'Kumari', 27, 2345673456,"patna"),
-  createData('Awanish', 'Kumar', 28, 7676127870,"patna"),
-  createData('Bipin', 'Kumar', 30, 7676127870,"patna"),
-  createData('Abhishek', 'Kumar', 29, 6364236112,"patna"),
-  createData('Saurav', 'Kumar', 29, 87834758583,"patna"),
-  createData('Sony', 'Kumari', 27, 2345673456,"patna"),
-  createData('Awanish', 'Kumar', 28, 7676127870,"patna"),
-  createData('Bipin', 'Kumar', 30, 7676127870,"patna"),
-  createData('Abhishek', 'Kumar', 29, 6364236112,"patna"),
-  createData('Saurav', 'Kumar', 29, 87834758583,"patna"),
-  createData('Sony', 'Kumari', 27, 2345673456,"patna"),
-  createData('Awanish', 'Kumar', 28, 7676127870,"patna"),
-  createData('Bipin', 'Kumar', 30, 7676127870,"patna"),
-  createData('Abhishek', 'Kumar', 29, 6364236112,"patna"),
-  createData('Saurav', 'Kumar', 29, 87834758583,"patna"),
-  createData('Sony', 'Kumari', 27, 2345673456,"patna"),
-  createData('Awanish', 'Kumar', 28, 7676127870,"patna"),
-  createData('Bipin', 'Kumar', 30, 7676127870,"patna")
-];
-
-const useStyles = makeStyles({
+  const [data, setData] = useState([
+        { name: 'Abhi', lastname: 'Kumar', address: 'India', mobile:123434666,designation: "Doctor", pin:453453,dist:'patna'},
+        { name: 'Saurav', lastname: 'Singh', address: 'USA',mobile:99999999, designation: "Engineer",pin:453453,dist:'patna' },
+        { name: 'Awanish', lastname: 'Kumar',  address: 'UK',mobile:6677777,designation: "Actor",pin:453453,dist:'patna' },
+        { name: 'Bipin', lastname: 'Srivatva',  address: 'Australia',mobile:4444444,designation: "Doctor",pin:453453,dist:'patna'},
+        { name: 'Shubham', lastname: 'Kumar',address: 'UK',mobile:33333333, designation: "Actor", pin:453453,dist:'patna' },
+        { name: 'Sony', lastname: 'Gupta', address: 'Australia',mobile:7777777, designation: "Playback Singer",pin:453453,dist:'patna'},
+        { name: 'Shu', lastname: 'Kumar',  address: 'UK',mobile:6666666,designation: "Actor",pin:453453,dist:'patna' },
+        { name: 'Ritu', lastname: 'Kumari',  address: 'Australia',mobile:4444444,designation: "Playback Singer",pin:453453,dist:'patna' }
+        
+  ]);
+  const useStyles = makeStyles({
   root: {
     width: '100%',
   },
   container: {
-    maxHeight: 440,
+    maxHeight: 50,
   },
 });
+const classes = useStyles();
+   return( 
+   	 <MaterialTable
+   	 className={classes.container}
+      title="Data-Grid"
+      columns={columns}
+      data={data}
+      options={{
+        selection: true,
+        grouping: true,
+        fixedColumns: {
+        left: 0, 
+        right: 2
+      }
+      }}
+      editable={{
+        onRowAdd: newData =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              setData([...data, newData]);
+              
+              resolve();
+            }, 1000)
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              const dataUpdate = [...data];
+              const index = oldData.tableData.id;
+              dataUpdate[index] = newData;
+              setData([...dataUpdate]);
 
-export default function SimpleTable(props) {
-  const [selected, setSelected] = React.useState([]);
-  const classes = useStyles();
-  const {numSelected,
-    rowCount,onSelectAllClick}=props;
-    
-   
-    
-  return (
-    <TableContainer className={classes.container}>
-      <Table stickyHeader aria-label="sticky table">
-        <TableHead>
-          <TableRow >
-          <TableCell padding="checkbox">
-          </TableCell>
-          {columns.map((column) => (
-            <TableCell
-              key={column.id}
-              style={{ minWidth: column.minWidth }}>
-              {column.label}  
-            </TableCell>
-          ))}
-          </TableRow>
-        
-        </TableHead>
-        <TableBody>
-
-          {rows.map((row) => (
-            <TableRow key={row.firstname}>
-            <TableCell padding="checkbox">
-            <Checkbox
-            />
-          </TableCell>
-              <TableCell>{row.firstname}</TableCell>
-              <TableCell>{row.lastname}</TableCell>
-              <TableCell>{row.age}</TableCell>
-              <TableCell>{row.mobnumber}</TableCell>
-              <TableCell>{row.address}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-  
-}
-SimpleTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  rowCount: PropTypes.number.isRequired
-};
+              resolve();
+            }, 1000)
+          }),
+     
+      }}
+       
+    />)
+  }
+  export default DataTable;
