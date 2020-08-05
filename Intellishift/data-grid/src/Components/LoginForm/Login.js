@@ -1,6 +1,7 @@
 import React, { Component,useState } from 'react';
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import './Login.css';
+import { NavLink } from "reactstrap";
 import history from '../../history';
 export default function Login(props) {
 const [username, setUserName] = useState("");
@@ -30,9 +31,8 @@ onChange={e => setPassword(e.target.value)}
 type="password"
 />
 </FormGroup>
-<Button block bsSize="large"  onClick={() => history.push('/datagrid')}>
-Login
-</Button>
+<NavLink href="/datagrid">Login</NavLink>
+
 </form>
 </div>
 );
